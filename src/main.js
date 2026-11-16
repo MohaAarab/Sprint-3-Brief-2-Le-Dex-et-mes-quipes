@@ -1,5 +1,5 @@
 // App state, startup and event listeners.
-import { getCreatures, searchCards, resetPagination } from "./services/api.js";
+import { request } from "./services/api.js";
 import {
   getSavedCreatures,
   saveCreature,
@@ -46,31 +46,16 @@ function findCreature(id) {
 
 function renderCurrent() {
   rememberCards(creatures);
-
-  const type = tpSelect.value;
   const favs = getFavorites();
 
-  const filtered = creatures.filter((creature) => {
-    if (type === "Favoris") {
-      return favs.includes(String(creature.id));
-    }
-
-    return (
-      type === "Tous" ||
-      (type === "Monster" && creature.type.includes("Monster")) ||
-      creature.type === type
-    );
-  });
-
-  affich(filtered, creatures.length, team.length, favs);
+  affich(creatures.length, team.length, favs);
 }
 
+// loading the initial cards
 async function loadInitialCards() {
-  resetPagination();
-  const first = await getCreatures();
-  creatures = [...first, ...getSavedCreatures()];
+  creatures = await request("GET","/creatures");
   renderCurrent();
-  setLoadMoreVisible(true);
+  setLoadMoreVisible(false);
   hideDetail();
 }
 
