@@ -101,23 +101,17 @@ async function handleSearch() {
   rech.disabled = true;
   showStatus(value ? "Recherche en cours..." : "Chargement des cartes...");
   try {
-    if (!value) {
-      await loadInitialCards();
-      clearLastSearch();
-    } else {
-      const result = await searchCards(value);
-      saveLastSearch(value);
-      creatures = result;
-      renderCurrent();
-      setLoadMoreVisible(false);
-      hideDetail();
-      if (result.length === 0) {
-        clearGrid();
-        showStatus("Aucune carte trouvée");
-        return;
-      }
-    }
-    showStatus("");
+    let route = "/creatures";
+
+    if (!value && tpSelect.value !== "Tous") route+=`?type=${encodeURIComponent(tpSelect.value )}`
+    else if (value && tpSelect.value !== "Tous") route+=`?type=${encodeURIComponent(tpSelect.value )}&q=${encodeURIComponent(value)}`
+    else if (value) route+=`?q=${encodeURIComponent(value)}`
+  
+    creatures= await request("GET",`${route}`)
+    renderCurrent()
+    showStatus(creatures.length ===0 ? "Aucune créature trouvée" : "")
+
+
   } catch (error) {
     console.error(error);
     clearGrid();
@@ -130,21 +124,7 @@ async function handleSearch() {
 }
 
 async function searchFilter() {
-  const type = tpSelect.value;
-  showStatus("chargement ...");
-
-try {
-  if(type === "Tous") creatures =await request("GET","/creatures") 
-  else creatures = await request("GET",`/creatures?type=${encodeURIComponent(type)}`) 
-
-  renderCurrent();
-  showStatus("")
-
-}catch(error){
-  console.error(error);
-  showStatus("Erreur lors du filtrage")
-  clearGrid()
-}
+  await handleSearch()
 }
 
 function addToTeam(id) {
@@ -458,3 +438,10 @@ retry_btn.addEventListener("click", () => {
 formValidation();
 teamCreation(team, findCreature);
 init();
+
+
+
+
+
+
+
