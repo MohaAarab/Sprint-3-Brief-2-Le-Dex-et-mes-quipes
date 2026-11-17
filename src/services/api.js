@@ -1,7 +1,7 @@
 
 
 
-export async function request(method,route,body) {
+export  async function request(method,route) {
     const url=`http://localhost:3000${route}`;
     try{
             const response=await fetch(url,{method})

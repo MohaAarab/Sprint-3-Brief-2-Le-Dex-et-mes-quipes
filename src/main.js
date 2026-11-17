@@ -48,7 +48,7 @@ function renderCurrent() {
   rememberCards(creatures);
   const favs = getFavorites();
 
-  affich(creatures.length, team.length, favs);
+  affich(creatures,creatures.length, team.length, favs);
 }
 
 // loading the initial cards
@@ -63,14 +63,10 @@ async function init() {
   hideRetry();
   showStatus("Chargement des cartes...");
   try {
-    const last = getLastSearch();
-    if (last) {
-      rech.value = last;
-      await handleSearch();
-    } else {
+  
       await loadInitialCards();
       showStatus("");
-    }
+    
   } catch (error) {
     console.error(error);
     clearGrid();
@@ -133,8 +129,22 @@ async function handleSearch() {
   }
 }
 
-function searchFilter() {
+async function searchFilter() {
+  const type = tpSelect.value;
+  showStatus("chargement ...");
+
+try {
+  if(type === "Tous") creatures =await request("GET","/creatures") 
+  else creatures = await request("GET",`/creatures?type=${encodeURIComponent(type)}`) 
+
   renderCurrent();
+  showStatus("")
+
+}catch(error){
+  console.error(error);
+  showStatus("Erreur lors du filtrage")
+  clearGrid()
+}
 }
 
 function addToTeam(id) {
