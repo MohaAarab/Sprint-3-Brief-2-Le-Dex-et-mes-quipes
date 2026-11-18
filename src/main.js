@@ -8,6 +8,8 @@ import {
   clearLastSearch,
   getFavorites,
   saveFavorites,
+  saveLastType,
+  getLastType,
 } from "./storage.js";
 import {
   affich,
@@ -35,6 +37,7 @@ const detailPanel = document.querySelector("#detail");
 const teamSlots = document.querySelector("#team-slots");
 const teamMsg = document.querySelector("#team-msg");
 const retry_btn = document.querySelector("#retry-btn");
+const sortSelect = document.querySelector("#sortFilter")
 let retryAction = init;
 function rememberCards(cards) {
   cards.forEach((card) => knownCreatures.set(String(card.id), card));
@@ -63,9 +66,8 @@ async function init() {
   hideRetry();
   showStatus("Chargement des cartes...");
   try {
-  
-      await loadInitialCards();
-      showStatus("");
+      tpSelect.value=getLastType()
+      await handleSearch();
     
   } catch (error) {
     console.error(error);
@@ -124,6 +126,7 @@ async function handleSearch() {
 }
 
 async function searchFilter() {
+  saveLastType(tpSelect.value)
   await handleSearch()
 }
 
@@ -434,6 +437,8 @@ retry_btn.addEventListener("click", () => {
   hideRetry()
   retryAction()
 });
+
+
 
 formValidation();
 teamCreation(team, findCreature);
