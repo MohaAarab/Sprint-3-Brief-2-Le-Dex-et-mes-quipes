@@ -27,3 +27,11 @@ export function getFavorites() {
 export function saveFavorites(favorites) {
   localStorage.setItem("favorites", JSON.stringify(favorites));
 }
+
+export function saveLastType(type){
+  localStorage.setItem("lastType",type)
+}
+
+export function getLastType(){
+  return localStorage.getItem("lastType") || "Tous"
+}
