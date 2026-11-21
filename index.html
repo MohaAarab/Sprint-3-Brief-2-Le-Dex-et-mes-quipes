@@ -73,10 +73,10 @@
 
       <!-- ===================== GRILLE DES CRÉATURES ===================== -->
       <section id="grid" aria-label="Créatures" class="grid min-w-0 flex-1 grid-cols-1 gap-5  sm:grid-cols-2 xl:grid-cols-3 ">
+        <p id="loading" class=" text-brand text-xl col-span-full"></p>
         <div id="cards-container"></div>
         
       </section>
-      <p id="loading" class=" text-brand text-xl"></p>
       <button id="retry-btn" type="button" class="hidden btn-primary btn-outline bg-brand text-line border-solid border-brand-light mt-auto shadow-[0_0_25px_rgba(250,204,21,0.6)]">Réessayer</button>
 
       <aside class="flex w-full min-w-0 flex-col gap-6 lg:w-[420px] lg:shrink-0">
@@ -116,9 +116,8 @@
         <label class="flex flex-col gap-1 text-sm font-bold">Type
           <select name="type" id="type" class="field font-normal border border-brand-light bg-ink">
             <option value="">Choisir un type</option>
-            <option value="Monster">Monstres</option>
-            <option value="Spell Card">Magie</option>
-            <option value="Trap Card">Pièges</option>
+            <option value="Normal Monster">Normal Monster</option>
+            <option value="Effect Monster">Effect Monster</option>
           </select>
           <span id="typeError" class="error-message text-sm font-normal text-muted"></span>
         </label>
