@@ -1,11 +1,12 @@
 // App state, startup and event listeners.
-import { request, getCreature, createCreature } from "./services/api.js";
 import {
-  getSavedCreatures,
-  saveCreature,
-  getLastSearch,
-  saveLastSearch,
-  clearLastSearch,
+  request,
+  getCreature,
+  createCreature,
+  updateCreature,
+  deleteCreature,
+} from "./services/api.js";
+import {
   getFavorites,
   saveFavorites,
   saveLastType,
@@ -20,24 +21,13 @@ import {
   hideDetail,
   showStatus,
   clearGrid,
-  setLoadMoreVisible,
   teamCreation,
-  error,
-  errorRemovale,
   showRetry,
   hideRetry,
 } from "./ui.js";
 import { validateCreature } from "./rules.js";
 
-// validation test
-// console.log(validateCreature({
-//   name: "",
-//   type: "",
-//   stats: {
-//     attack: 300,
-//     defense: 0
-//   }
-// }));
+
 
 let creatures = [];
 let team = [];
@@ -46,13 +36,14 @@ const knownCreatures = new Map();
 const grid = document.querySelector("#grid");
 const rech = document.querySelector("#search");
 const tpSelect = document.querySelector("#typeFilter");
-const load_more = document.querySelector("#load-more");
 const detailPanel = document.querySelector("#detail");
 const teamSlots = document.querySelector("#team-slots");
 const teamMsg = document.querySelector("#team-msg");
 const retry_btn = document.querySelector("#retry-btn");
 const sortSelect = document.querySelector("#sortFilter");
 let retryAction = init;
+let editingId = null;
+
 function rememberCards(cards) {
   cards.forEach((card) => knownCreatures.set(String(card.id), card));
 }
@@ -68,13 +59,6 @@ function renderCurrent() {
   affich(creatures, creatures.length, team.length, favs);
 }
 
-// loading the initial cards
-async function loadInitialCards() {
-  creatures = await request("GET", "/creatures");
-  renderCurrent();
-  setLoadMoreVisible(false);
-  hideDetail();
-}
 
 async function init() {
   hideRetry();
@@ -91,24 +75,6 @@ async function init() {
   }
 }
 
-async function loadMore() {
-  hideRetry();
-  load_more.disabled = true;
-  try {
-    const more = await getCreatures();
-    creatures.push(...more);
-    renderCurrent();
-    showStatus("");
-  } catch (error) {
-    console.error(error);
-    clearGrid();
-    showStatus("Erreur de chargement des cartes");
-    retryAction = loadMore;
-    showRetry();
-  } finally {
-    load_more.disabled = false;
-  }
-}
 
 async function handleSearch() {
   hideRetry();
@@ -184,6 +150,8 @@ function formValidation() {
 
   // for form draft to sessionStorage
   form.addEventListener("input", () => {
+    if (editingId !== null) return;
+
     const data = Object.fromEntries(new FormData(form));
     saveFormDraft(data);
   });
@@ -231,15 +199,33 @@ function formValidation() {
     submitBtn.disabled = true;
 
     try {
-      await createCreature(newCreature);
+      const isEditing = editingId !== null;
+
+      if (isEditing) {
+        // PUT: Update existing creature
+        await updateCreature(editingId, newCreature);
+      } else {
+        // POST: Create new creature
+        await createCreature(newCreature);
+      }
+
+      // Reload creatures from the API
       await handleSearch();
 
+      // Reset form state
+      editingId = null;
       form.reset();
-      clearFormDraft();
-      showStatus("Créature ajoutée avec succès");
+      document.querySelector("#create h2").textContent = "Nouvelle créature";
+      submitBtn.textContent = "Ajouter la créature";
+
+      showStatus(
+        isEditing
+          ? "Créature modifiée avec succès"
+          : "Créature ajoutée avec succès",
+      );
     } catch (error) {
       console.error(error);
-      showStatus("Erreur lors de l'ajout");
+      showStatus("Erreur lors de l'enregistrement");
     } finally {
       submitBtn.disabled = false;
     }
@@ -247,6 +233,7 @@ function formValidation() {
 
   form.addEventListener("reset", () => {
     clearFormDraft();
+    resetEditMode();
   });
 }
 
@@ -276,6 +263,37 @@ function toggleFavorites(id) {
   } else {
     addFavorite(id);
   }
+}
+
+function fillEditForm(creature) {
+  editingId = creature.id;
+
+  const form = document.querySelector("#creature-form");
+
+  form.querySelector("#name").value = creature.name;
+  form.querySelector("#type").value = creature.type;
+  form.querySelector("#img").value = creature.image;
+  form.querySelector("#description").value = creature.description;
+  form.querySelector("#attack").value = creature.stats.attack;
+  form.querySelector("#defence").value = creature.stats.defense;
+
+  // Update the form title
+  document.querySelector("#create h2").textContent = "Modifier la créature";
+
+  // Update the submit button
+  form.querySelector('button[type="submit"]').textContent =
+    "Enregistrer les modifications";
+
+  // Scroll to form
+  document.querySelector("#create").scrollIntoView({
+    behavior: "smooth",
+  });
+}
+
+function resetEditMode() {
+  editingId = null;
+  document.querySelector("#create h2").textContent = "nouvelle creature";
+  document.querySelector("#add_creature").textContent = "ajouter la creature";
 }
 
 // Event listeners
@@ -308,10 +326,40 @@ grid.addEventListener("click", async (event) => {
   }
 });
 
-detailPanel.addEventListener("click", (event) => {
+detailPanel.addEventListener("click", async (event) => {
   const target = event.target;
   if (target.classList.contains("btn-add")) addToTeam(target.dataset.id);
   if (target.classList.contains("btn-close")) hideDetail();
+  if (target.classList.contains("btn-edit")) {
+    try {
+      const creature = await getCreature(target.dataset.id);
+      fillEditForm(creature);
+    } catch (error) {
+      console.error(error);
+      showStatus("Erreur lors du chargement de la créature");
+    }
+  }
+  if (target.classList.contains("btn-delete")) {
+    const id = target.dataset.id;
+
+    const confirmed = confirm(
+      "vouler-vous vraiment supprimer cette creature ?",
+    );
+
+    if (!confirmed) return;
+    target.disabled = true;
+    try {
+      await deleteCreature(id);
+      hideDetail();
+      await handleSearch();
+      showStatus("creature supprimee avec succes");
+    } catch (error) {
+      console.error(error);
+      showStatus("erreur lors de suppression");
+    } finally {
+      target.disabled = false;
+    }
+  }
 });
 
 rech.addEventListener("keydown", (event) => {
@@ -323,7 +371,6 @@ rech.addEventListener("keydown", (event) => {
 
 tpSelect.addEventListener("change", searchFilter);
 
-load_more.addEventListener("click", loadMore);
 teamSlots.addEventListener("click", (event) => {
   if (event.target.classList.contains("btn-remove")) {
     removeFromTeam(event.target.dataset.id);

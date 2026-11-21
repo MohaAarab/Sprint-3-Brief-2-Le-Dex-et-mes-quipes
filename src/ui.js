@@ -17,10 +17,6 @@ export function clearGrid() {
   document.querySelector("#creature-count").textContent = "0";
 }
 
-export function setLoadMoreVisible(visible) {
-  document.querySelector("#load-more").classList.toggle("hidden", !visible);
-}
-
 export function hideDetail() {
   document.querySelector("#detail").classList.add("hidden");
 }
@@ -227,36 +223,32 @@ export function detail(creature, teamCount) {
   addBtn.type = "button";
   addBtn.dataset.id = creature.id;
 
+  const editBtn = createEl(
+    "button",
+    "btn-edit btn-primary text-line border-2 border-brand-light",
+    "Modifier"
+  );
+  
+  editBtn.type = "button";
+  editBtn.dataset.id = creature.id;
+
+  const deleteBtn = createEl("button", "btn-delete bg-red-700 text-white border-2 border-red-500 rounded-lg p-3", "Supprimer")
+  deleteBtn.type = "button";
+  deleteBtn.dataset.id = creature.id;
+
   section.append(
     header,
     imgContainer,
     titleRow,
     description,
     stats,
-    addBtn
+    addBtn,
+    editBtn,
+    deleteBtn
   );
 
   detailPanel.appendChild(section);
   updateButtons(teamCount);
-}
-
-export function error(id, msg, inputId) {
-  const errorEL = document.getElementById(id);
-  errorEL.textContent = msg;
-  errorEL.style.display = "block";
-
-  const input = document.querySelector(inputId);
-  input.classList.remove("border-brand-light");
-  input.classList.add("border-red-600");
-}
-// error remove function
-export function errorRemovale(id, inputId) {
-  const errorEL = document.querySelector(id);
-  errorEL.textContent = "";
-  errorEL.style.display = "none";
-  const input = document.querySelector(inputId);
-  input.classList.remove("border-red-600");
-  input.classList.add("border-brand-light");
 }
 
 export function updateButtons(teamCount) {
