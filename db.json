@@ -131,17 +131,6 @@
         "attack": 1200,
         "defense": 700
       }
-    },
-    {
-      "name": "test monster",
-      "type": "Monster",
-      "image": "https://unsplash.com/photos/demon-mask-in-shaggy-fur-costume-po1ffK4lLMw",
-      "description": "this is a test monster",
-      "stats": {
-        "attack": 5000,
-        "defense": 5000
-      },
-      "id": 13
     }
   ],
   "teams": []

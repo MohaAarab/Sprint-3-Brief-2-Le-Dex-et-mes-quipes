@@ -170,7 +170,24 @@ function removeFromTeam(id) {
 function formValidation() {
   const form = document.querySelector("#creature-form");
   const submitBtn = form.querySelector('button[type="submit"]');
+  const draft = getFormDraft();
 
+  if (draft) {
+    Object.entries(draft).forEach(([name, value]) => {
+      const field = form.elements.namedItem(name);
+  
+      if (field && "value" in field) {
+        field.value = value;
+      }
+    });
+  }
+  
+// for form draft to sessionStorage
+  form.addEventListener("input", () => {
+    const data = Object.fromEntries(new FormData(form));
+    saveFormDraft(data);
+  });
+  
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -218,6 +235,7 @@ function formValidation() {
       await handleSearch();
 
       form.reset();
+      clearFormDraft()
       showStatus("Créature ajoutée avec succès");
     } catch (error) {
       console.error(error);
@@ -225,6 +243,10 @@ function formValidation() {
     } finally {
       submitBtn.disabled = false;
     }
+  });
+
+  form.addEventListener("reset", () => {
+    clearFormDraft();
   });
 }
 
