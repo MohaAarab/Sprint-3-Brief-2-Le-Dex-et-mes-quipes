@@ -1,136 +1,135 @@
-# Mon Dex · Encyclopédie Yu-Gi-Oh!
+# Mon Dex — Yu-Gi-Oh! | Sprint 3 — Brief 2
 
-Une application web interactive permettant d'explorer les cartes de l'univers **Yu-Gi-Oh!** grâce à l'API publique **YGOPRODeck**.
+Application web de gestion de cartes **Yu-Gi-Oh!**, développée dans le cadre de la formation **Développeur Web et Web Mobile à YouCode Safi**.
 
-L'utilisateur peut consulter les cartes, rechercher par nom, filtrer par type, afficher leurs détails, charger davantage de résultats, gérer ses favoris, créer ses propres cartes et composer une équipe de six cartes maximum.
+Cette version fait évoluer le précédent Mon Dex : les créatures sont désormais lues, créées, modifiées et supprimées via une **API REST locale avec json-server**, au lieu d'être stockées dans `data.js` ou dans le LocalStorage.
 
-Projet réalisé dans le cadre de la formation **YouCode Safi — Sprint 3 · Brief 1 : Mon Dex connecté**.
+**Dépôt GitHub :** https://github.com/MohaAarab/Sprint-3-Brief-1-Mon-Dex-connect-  
+**Tableau de planification Trello :** https://trello.com/invite/b/6afb0e1e813b73b368bfbd4b/ATTIa92d9b506619b7cd3e98d4a6048ccae01FEB7E71/sprint-3-brief-2-le-dex-et-mes-equipes
 
-**Démo en ligne :** [Mon Dex](https://mohaaarab.github.io/Sprint-3-Brief-1-Mon-Dex-connect-/)
+> **Démonstration en local :** l'API fonctionne sur `http://localhost:3000`. Le projet n'est pas prévu pour GitHub Pages sans hébergement séparé de l'API.
 
-**Repository GitHub :** [yugioh-dex](https://github.com/MohaAarab/Sprint-3-Brief-1-Mon-Dex-connect-.git)
+## Fonctionnalités
 
-**Tableau de planification :** [Trello](https://trello.com/invite/b/6af1e07329fd19742b6d8113/ATTIe9c8b33f501435d91251cc9acae3311eE9286456/sprint-3-brief-1-mon-dex-connecte)
+- Affichage des cartes depuis `GET /creatures`, avec image, identifiant, nom et type.
+- Recherche côté serveur (`q`), filtre par type (`type`) et tri (`_sort`, `_order`) combinables.
+- Consultation d'une fiche détaillée via `GET /creatures/:id`, avec statistiques et description.
+- Ajout de créatures via `POST /creatures` et validation du formulaire.
+- Modification de créatures via `PUT /creatures/:id`, avec formulaire prérempli.
+- Suppression via `DELETE /creatures/:id`, après confirmation.
+- Messages de chargement, de résultat vide, de succès et d'erreur ; gestion des erreurs HTTP et réseau.
+- Sauvegarde du dernier filtre de type avec **LocalStorage** et du brouillon d'ajout avec **SessionStorage**.
+- Affichage avec `createElement()`, `textContent` et les méthodes du DOM, sans injection de données API via `innerHTML`.
+- Fonctions complémentaires héritées de Mon Dex : favoris et équipe locale (fonctionnalités distinctes du bonus de persistance des équipes via l'API).
 
----
+## Technologies
 
-## 1. Contexte du projet
+- HTML5, Tailwind CSS 3, JavaScript (modules ES)
+- Fetch API, `async` / `await`
+- json-server **0.17.4** pour l'API REST locale
+- Git / GitHub pour le versionnement et les Pull Requests
 
-Dans le Sprint 2, une première version de Mon Dex utilisait un tableau JavaScript statique pour afficher les cartes.
+## Installation et lancement
 
-Le Sprint 3 consiste à connecter cette application à une **API externe** afin de récupérer les cartes dynamiquement.
+Prérequis : **Node.js et npm**.
 
-L'objectif est de réutiliser l'interface existante tout en intégrant les notions suivantes :
-
-- Consommation d'une API REST avec `fetch()`.
-- Programmation asynchrone avec `async/await`.
-- Transformation de données JSON.
-- Pagination et chargement progressif.
-- Recherche à partir de l'API.
-- Gestion des états de chargement, de succès, de résultat vide et d'erreur.
-- Sauvegarde des favoris avec LocalStorage.
-- Conservation de la dernière recherche avec SessionStorage.
-- Organisation du JavaScript en modules ES.
-
-## 2. Technologies utilisées
-
-| Technologie | Utilisation |
-|---|---|
-| HTML5 | Structure et éléments sémantiques |
-| Tailwind CSS | Design, animations et responsive |
-| JavaScript ES6 | Logique et interactivité |
-| Fetch API | Requêtes HTTP |
-| Async / Await | Gestion des opérations asynchrones |
-| YGOPRODeck API | Source des cartes |
-| LocalStorage | Favoris et cartes personnalisées |
-| SessionStorage | Dernière recherche |
-| Git / GitHub | Versionnement et déploiement |
-| GitHub Pages | Hébergement du site |
-
-Le projet utilise du JavaScript natif, sans framework frontend.
-
-## 3. API utilisée
-
-**YGOPRODeck API**
-
-Documentation : https://ygoprodeck.com/api-guide/
-
-URL de base :
-
-`https://db.ygoprodeck.com/api/v7/`
-
-L'API est gratuite et ne nécessite pas de clé d'authentification.
-
-### Endpoints
-
-**Récupération des cartes**
-
-```text
-GET /cardinfo.php?num=20&offset=0
+```bash
+git clone https://github.com/MohaAarab/Sprint-3-Brief-1-Mon-Dex-connect-.git
+cd Sprint-3-Brief-1-Mon-Dex-connect-
+npm install
 ```
 
-Récupère les vingt premières cartes.
+Si `json-server` n'est pas encore enregistré dans les dépendances de développement du dépôt, l'installer **une seule fois** puis committer `package.json` et `package-lock.json` :
 
-**Pagination**
-
-```text
-GET /cardinfo.php?num=20&offset=20
-GET /cardinfo.php?num=20&offset=40
+```bash
+npm install --save-dev json-server@0.17.4
 ```
 
-Chaque requête récupère la page suivante.
+Générer le CSS Tailwind (nécessaire si `dist/output.css` est ignoré par Git) :
 
-**Recherche par nom**
-
-```text
-GET /cardinfo.php?fname=Dark%20Magician
+```bash
+npm run build
 ```
 
-Le paramètre `fname` permet d'effectuer une recherche partielle sur les noms.
+Dans un premier terminal, démarrer l'API :
 
-**Recherche paginée**
-
-```text
-GET /cardinfo.php?fname=Dragon&num=20&offset=0
+```bash
+npx json-server --watch db.json --port 3000
 ```
 
-Les résultats sont récupérés progressivement par groupes de vingt.
+Dans un second terminal, servir `index.html` avec un serveur local (par exemple l'extension **Live Server** de l'éditeur). Ouvrir l'adresse locale fournie par ce serveur. Ne pas ouvrir la page directement via `file://`.
 
-## 4. Fonctionnalités
+Pour reconstruire automatiquement le CSS pendant le développement :
 
-### Affichage dynamique
+```bash
+npm run dev
+```
 
-- [x] Récupération des cartes depuis l'API.
-- [x] Vérification des réponses HTTP avec `response.ok`.
-- [x] Transformation des données API en objets JavaScript simplifiés.
-- [x] Affichage dynamique avec `map()` et `innerHTML`.
-- [x] Affichage des images, noms, types et niveaux.
+L'API est accessible à l'adresse **http://localhost:3000/creatures**. Le terminal json-server doit rester ouvert pour utiliser l'application.
 
-### Pagination
+> Si Live Server actualise la page après chaque POST, PUT ou DELETE, configurer Live Server pour ignorer les modifications de `db.json`.
 
-- [x] Chargement initial de vingt cartes.
-- [x] Bouton « Charger plus ».
-- [x] Gestion des paramètres `limit` et `offset`.
-- [x] Ajout des nouvelles cartes aux cartes déjà chargées.
-- [x] Désactivation du bouton pendant une requête.
-- [x] Pagination distincte pour les recherches.
+## Routes principales de l'API
 
-### Recherche et filtres
+| Méthode | Route | Utilisation |
+|---|---|---|
+| GET | `/creatures` | Toutes les créatures |
+| GET | `/creatures?type=Normal%20Monster` | Filtrer par type |
+| GET | `/creatures?q=dragon` | Rechercher |
+| GET | `/creatures?_sort=name&_order=asc` | Trier par nom |
+| GET | `/creatures?type=Normal%20Monster&q=dragon&_sort=name&_order=desc` | Combiner les paramètres |
+| GET | `/creatures/:id` | Consulter une créature |
+| POST | `/creatures` | Ajouter une créature |
+| PUT | `/creatures/:id` | Modifier une créature |
+| DELETE | `/creatures/:id` | Supprimer une créature |
 
-- [x] Recherche par nom directement depuis l'API.
-- [x] Prise en charge des noms contenant plusieurs mots avec `encodeURIComponent()`.
-- [x] Recherche déclenchée avec la touche Entrée.
-- [x] Filtrage par catégorie : Tous, Monstres, Magie et Pièges.
-- [x] Filtre Favoris.
-- [x] Retour à la liste initiale lorsque la recherche est effacée.
-- [x] Conservation de la dernière recherche dans SessionStorage.
+Les créatures sont stockées dans **`db.json`**. Le tableau `teams` est prévu pour l'extension bonus ; les fonctionnalités d'équipe affichées dans l'interface ne constituent pas nécessairement une implémentation complète des routes `/teams`.
 
-Le filtre de type s'applique aux cartes actuellement chargées.
+## Organisation du code
 
-### Détails des cartes
+```text
+.
+├── db.json                 # Base de données locale json-server
+├── index.html              # Interface de l'application
+├── package.json            # Dépendances et commandes npm
+├── tailwind.config.js      # Configuration Tailwind
+├── src/
+│   ├── main.js             # Démarrage, événements et coordination
+│   ├── ui.js               # Affichage et éléments DOM
+│   ├── rules.js            # Validation sans accès au DOM
+│   ├── storage.js          # LocalStorage et SessionStorage
+│   ├── services/
+│   │   └── api.js          # Requêtes HTTP centralisées
+│   └── input.css           # Styles source Tailwind
+└── dist/
+    └── output.css         # CSS généré (recréé par npm run build)
+```
 
-- [x] Ouverture du panneau de détails au clic sur une carte.
-- [x] Affichage de l'image et du nom.
-- [x] Affichage du type et de la description.
-- [x] Affichage des statistiques ATK et DEF.
-- [x] Barres vis
+## Gestion des données et des erreurs
+
+Toutes les requêtes HTTP passent par `src/services/api.js`. La fonction `request(method, route, body)` centralise `fetch()`, le contrôle de `response.ok`, la sérialisation des corps JSON et les erreurs.
+
+Le fichier `src/rules.js` contient `validateCreature(data)` ; les messages de validation s'affichent sous les champs du formulaire. Les valeurs d'attaque et de défense suivent une plage adaptée aux cartes Yu-Gi-Oh! (**1 à 5000**) dans cette implémentation ; le brief indique **1 à 255**.
+
+Le **LocalStorage** conserve le dernier type choisi (et les favoris). Le **SessionStorage** conserve le brouillon de création. **Aucune créature n'est enregistrée dans le LocalStorage : `db.json` est la source de vérité.**
+
+## Vérification manuelle
+
+1. Lancer json-server et ouvrir l'application.
+2. Vérifier le chargement des cartes, puis combiner recherche, type et tri.
+3. Ouvrir une fiche et vérifier `GET /creatures/:id` dans l'onglet Réseau.
+4. Ajouter une carte valide et vérifier le POST et son enregistrement dans `db.json`.
+5. Modifier cette carte via PUT et la supprimer via DELETE après confirmation.
+6. Rafraîchir après avoir sélectionné un type : le filtre doit être conservé.
+7. Saisir un brouillon dans le formulaire, rafraîchir et vérifier sa restauration.
+8. Arrêter json-server et vérifier qu'un message d'erreur apparaît sans bloquer l'interface.
+
+## Travail et suivi
+
+- Travail individuel réalisé à **YouCode Safi**.
+- Branches de fonctionnalités, Pull Requests et relectures selon les consignes du brief.
+- **Planification :** [Tableau Trello — Sprint 3 Brief 2](https://trello.com/invite/b/6afb0e1e813b73b368bfbd4b/ATTIa92d9b506619b7cd3e98d4a6048ccae01FEB7E71/sprint-3-brief-2-le-dex-et-mes-equipes).
+
+## Auteur
+
+**Mohamed Aarab** — [GitHub](https://github.com/MohaAarab)
