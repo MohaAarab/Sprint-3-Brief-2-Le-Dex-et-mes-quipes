@@ -12,9 +12,8 @@ export  async function request(method,route,body) {
     try{
             const response=await fetch(url,options)
             
-            if(!response.ok){
-                throw new Error ("HTTP error: " + response.status)
-            }
+            if(!response.ok) throw new Error ("HTTP error: " + response.status)
+            if (response.status === 204) return null
             
             const data= await response.json();
             
@@ -36,4 +35,8 @@ export async function createCreature(creature) {
 
 export async function updateCreature(id, creature) {
   return await request("PUT", `/creatures/${id}`, creature);
+}
+
+export async function deleteCreature(id) {
+  return await request("DELETE", `/creatures/${id}`)
 }
