@@ -6,7 +6,10 @@
       "type": "Normal Monster",
       "image": "https://images.ygoprodeck.com/images/cards/46986414.jpg",
       "description": "The ultimate wizard in terms of attack and defense.",
-      "stats": { "attack": 2500, "defense": 2100 }
+      "stats": {
+        "attack": 2500,
+        "defense": 2100
+      }
     },
     {
       "id": 2,
@@ -14,7 +17,10 @@
       "type": "Normal Monster",
       "image": "https://images.ygoprodeck.com/images/cards/89631139.jpg",
       "description": "A legendary dragon that is a powerful engine of destruction.",
-      "stats": { "attack": 3000, "defense": 2500 }
+      "stats": {
+        "attack": 3000,
+        "defense": 2500
+      }
     },
     {
       "id": 3,
@@ -22,7 +28,10 @@
       "type": "Normal Monster",
       "image": "https://images.ygoprodeck.com/images/cards/74677422.jpg",
       "description": "A ferocious dragon with a deadly attack.",
-      "stats": { "attack": 2400, "defense": 2000 }
+      "stats": {
+        "attack": 2400,
+        "defense": 2000
+      }
     },
     {
       "id": 4,
@@ -30,7 +39,10 @@
       "type": "Effect Monster",
       "image": "https://images.ygoprodeck.com/images/cards/38033121.jpg",
       "description": "Gains 300 ATK for every Dark Magician or Magician of Black Chaos in the graveyards.",
-      "stats": { "attack": 2000, "defense": 1700 }
+      "stats": {
+        "attack": 2000,
+        "defense": 1700
+      }
     },
     {
       "id": 5,
@@ -38,7 +50,10 @@
       "type": "Normal Monster",
       "image": "https://images.ygoprodeck.com/images/cards/70781052.jpg",
       "description": "A fiend with dark powers for confusing the enemy.",
-      "stats": { "attack": 2500, "defense": 1200 }
+      "stats": {
+        "attack": 2500,
+        "defense": 1200
+      }
     },
     {
       "id": 6,
@@ -46,7 +61,10 @@
       "type": "Effect Monster",
       "image": "https://images.ygoprodeck.com/images/cards/33396948.jpg",
       "description": "Win the duel by holding all five pieces of the Forbidden One in your hand.",
-      "stats": { "attack": 1000, "defense": 1000 }
+      "stats": {
+        "attack": 1000,
+        "defense": 1000
+      }
     },
     {
       "id": 7,
@@ -54,7 +72,10 @@
       "type": "Normal Monster",
       "image": "https://images.ygoprodeck.com/images/cards/91152256.jpg",
       "description": "An elf who learned to wield a sword and uses swift attacks.",
-      "stats": { "attack": 1400, "defense": 1200 }
+      "stats": {
+        "attack": 1400,
+        "defense": 1200
+      }
     },
     {
       "id": 8,
@@ -62,7 +83,10 @@
       "type": "Effect Monster",
       "image": "https://images.ygoprodeck.com/images/cards/40640057.jpg",
       "description": "Discard this card during an opponent's turn to prevent battle damage from one battle.",
-      "stats": { "attack": 300, "defense": 200 }
+      "stats": {
+        "attack": 300,
+        "defense": 200
+      }
     },
     {
       "id": 9,
@@ -70,7 +94,10 @@
       "type": "Effect Monster",
       "image": "https://images.ygoprodeck.com/images/cards/78193831.jpg",
       "description": "A legendary swordsman who becomes stronger against Dragon monsters.",
-      "stats": { "attack": 2600, "defense": 2300 }
+      "stats": {
+        "attack": 2600,
+        "defense": 2300
+      }
     },
     {
       "id": 10,
@@ -78,7 +105,10 @@
       "type": "Normal Monster",
       "image": "https://images.ygoprodeck.com/images/cards/6368038.jpg",
       "description": "A knight whose horse travels faster than the wind.",
-      "stats": { "attack": 2300, "defense": 2100 }
+      "stats": {
+        "attack": 2300,
+        "defense": 2100
+      }
     },
     {
       "id": 11,
@@ -86,7 +116,10 @@
       "type": "Effect Monster",
       "image": "https://images.ygoprodeck.com/images/cards/77585513.jpg",
       "description": "A powerful machine that shuts down Trap Card effects.",
-      "stats": { "attack": 2400, "defense": 1500 }
+      "stats": {
+        "attack": 2400,
+        "defense": 1500
+      }
     },
     {
       "id": 12,
@@ -94,7 +127,10 @@
       "type": "Normal Monster",
       "image": "https://images.ygoprodeck.com/images/cards/88819587.jpg",
       "description": "Much more than just a child, this dragon is gifted with untapped power.",
-      "stats": { "attack": 1200, "defense": 700 }
+      "stats": {
+        "attack": 1200,
+        "defense": 700
+      }
     }
   ],
   "teams": []
