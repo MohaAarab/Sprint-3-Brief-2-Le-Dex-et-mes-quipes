@@ -1,0 +1,15 @@
+{
+  "name": "mon-dex",
+  "version": "1.0.0",
+  "description": "Sprint 3 — Brief 1 : Mon Dex connecté",
+  "private": true,
+  "scripts": {
+    "dev": "./node_modules/.bin/tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
+    "build": "./node_modules/.bin/tailwindcss -i ./src/input.css -o ./dist/output.css --minify",
+    "api": "node ./node_modules/json-server/lib/cli/bin.js --watch db.json --port 3000"
+  },
+  "devDependencies": {
+    "json-server": "^0.17.4",
+    "tailwindcss": "3.4.19"
+  }
+}
