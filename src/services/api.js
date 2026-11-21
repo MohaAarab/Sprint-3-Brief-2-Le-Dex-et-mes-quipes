@@ -33,3 +33,7 @@ export async function getCreature(id){
 export async function createCreature(creature) {
    return await request("POST","/creatures",creature )
 }
+
+export async function updateCreature(id, creature) {
+  return await request("PUT", `/creatures/${id}`, creature);
+}

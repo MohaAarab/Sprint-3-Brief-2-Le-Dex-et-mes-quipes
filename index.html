@@ -69,35 +69,90 @@
 </div>
     </section>
 
-    <div class="flex flex-col gap-8 lg:flex-row lg:items-start">
+      <!-- ===================== GRID & SIDEBAR ===================== -->
 
-      <!-- ===================== GRILLE DES CRÉATURES ===================== -->
-      <section id="grid" aria-label="Créatures" class="grid min-w-0 flex-1 grid-cols-1 gap-5  sm:grid-cols-2 xl:grid-cols-3 ">
-        <p id="loading" class=" text-brand text-xl col-span-full"></p>
-        <div id="cards-container"></div>
-        
-      </section>
-      <button id="retry-btn" type="button" class="hidden btn-primary btn-outline bg-brand text-line border-solid border-brand-light mt-auto shadow-[0_0_25px_rgba(250,204,21,0.6)]">Réessayer</button>
+      <div class="flex flex-col gap-8 lg:flex-row lg:items-start">
 
-      <aside class="flex w-full min-w-0 flex-col gap-6 lg:w-[420px] lg:shrink-0">
+        <!-- LEFT: CREATURE GRID -->
+        <div class="min-w-0 flex-1">
 
-        <!-- ===================== PANNEAU DE DÉTAIL ===================== -->
-         <div id="detail" class="p-0 m-0 ">
+          <p
+            id="loading"
+            role="status"
+            aria-live="polite"
+            class="min-h-7 mb-3 text-brand text-xl"
+          ></p>
+
+          <section
+            id="grid"
+            aria-label="Créatures"
+            class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3"
+          ></section>
+
+          <button
+            id="retry-btn"
+            type="button"
+            class="hidden btn-primary btn-outline bg-brand text-line border-solid border-brand-light mt-4 shadow-[0_0_25px_rgba(250,204,21,0.6)]"
+          >
+            Réessayer
+          </button>
+
         </div>
 
-        <!-- ===================== MON ÉQUIPE (INCOMPLÈTE) ===================== -->
-        <section id="team" aria-label="Mon équipe" class="rounded-card bg-ground p-6 border-4 border-brand-light"style="box-shadow: 0 0 30px rgba(250, 204, 21, 0.6);">
-          <div class="flex justify-between">
-            <h2 class="font-display text-2xl font-extrabold text-cream">Mon équipe</h2>
-          <div id="team-counter" class="border border-brand-light rounded-2xl px-2 py-2 text-brand">0/6</div>
-          </div>
-        <div id="team-slots" class="grid min-w-0 flex-1 grid-cols-2 gap-5 mt-3 text-center text-cream sm:grid-cols-3"></div>
-        <div id="team-msg" class=" text-center text-brand pt-5">no creature</div>
-        </section>
+        <!-- RIGHT: DETAIL & TEAM -->
+        <aside class="flex w-full min-w-0 flex-col gap-6 lg:w-[420px] lg:shrink-0">
 
-      </aside>
-    </div>
-    <button id="load-more" type="button" class="load-more btn-primary btn-outline bg-brand text-line border-solid border-brand-light mt-auto shadow-[0_0_25px_rgba(250,204,21,0.6)]">charger plus</button>
+          <!-- CREATURE DETAILS -->
+          <div id="detail" class="p-0 m-0"></div>
+
+          <!-- TEAM -->
+          <section
+            id="team"
+            aria-label="Mon équipe"
+            class="rounded-card bg-ground p-6 border-4 border-brand-light"
+            style="box-shadow: 0 0 30px rgba(250,204,21,0.6);"
+          >
+            <div class="flex justify-between">
+              <h2 class="font-display text-2xl font-extrabold text-cream">
+                Mon équipe
+              </h2>
+
+              <div
+                id="team-counter"
+                class="border border-brand-light rounded-2xl px-2 py-2 text-brand"
+              >
+                0/6
+              </div>
+            </div>
+
+            <div
+              id="team-slots"
+              class="grid min-w-0 flex-1 grid-cols-2 gap-5 mt-3 text-center text-cream sm:grid-cols-3"
+            ></div>
+
+            <div
+              id="team-msg"
+              class="text-center text-brand pt-5"
+            >
+              no creature
+            </div>
+          </section>
+
+        </aside>
+
+      </div>
+
+      <!-- LOAD MORE -->
+      <button
+        id="load-more"
+        type="button"
+        class="load-more btn-primary btn-outline bg-brand text-line border-solid border-brand-light mt-auto shadow-[0_0_25px_rgba(250,204,21,0.6)]"
+      >
+        charger plus
+      </button>
+
+      <!-- ===================== FORMULAIRE DE CRÉATION ===================== -->
+
     <!-- ===================== FORMULAIRE DE CRÉATION ===================== -->
     <section id="create" aria-label="Nouvelle créature" class="flex flex-col gap-6 rounded-card bg-ground border-2 border-brand-light p-8"style="box-shadow: 0 0 30px rgba(250, 204, 21, 0.6);">
       <div>
